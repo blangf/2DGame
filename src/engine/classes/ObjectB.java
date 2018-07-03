@@ -22,6 +22,14 @@ public class ObjectB {
         renderer.drawImage(image, (int) x - (image.getW() / 2), (int) y - (image.getH() / 2));
     }
 
+    public boolean isOutOfBounds(GameContainer gc, int x, int y){
+        if(x < 0 || x >= gc.getWidth() || y < 0 || y >= gc.getHeight()){
+            return true;
+        }
+
+        return false;
+    }
+
     public Image getImage() {
         return image;
     }

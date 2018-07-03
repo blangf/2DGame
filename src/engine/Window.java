@@ -25,14 +25,12 @@ public class Window {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         frame.add(canvas, BorderLayout.CENTER);
-        frame.toFront();
-        frame.requestFocus();
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setVisible(true);
 
-        canvas.createBufferStrategy(2);
+        canvas.createBufferStrategy(3);
         bs = canvas.getBufferStrategy();
         g = bs.getDrawGraphics();
     }
