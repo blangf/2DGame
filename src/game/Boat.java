@@ -1,5 +1,6 @@
 package game;
 
+import engine.AbstractGame;
 import engine.GameContainer;
 import engine.Renderer;
 import engine.audio.SoundClip;
@@ -15,8 +16,6 @@ public class Boat extends ObjectA {
 
     private double speed, turnTime, shootTime;
     private double rotation;
-    ArrayList<Shot> shots = new ArrayList<Shot>();
-    ArrayList<Rocket> rockets = new ArrayList<Rocket>();
     SoundClip gunClip = new SoundClip("/audio/gunShot.wav");
     SoundClip rocketClip = new SoundClip("/audio/missile.wav");
 
@@ -68,7 +67,7 @@ public class Boat extends ObjectA {
     }
 
     @Override
-    public void update(GameContainer gc, float dt) {
+    public void update(GameContainer gc, float dt, AbstractGame gm) {
         if(gc.getInput().isKey(KeyEvent.VK_W)){
             goForward(gc);
         }
@@ -87,39 +86,26 @@ public class Boat extends ObjectA {
             setSpeed(5);
         }
 
+        shootTime += dt;
+
         if(gc.getInput().isButton(MouseEvent.BUTTON1)){
-            if(shootTime == 10){
-                shots.add(new Shot(getX(), getY(), getRotation()));
+            System.out.println(shootTime);
+            if(shootTime > 0.2){
+                gm.addToObjects(new Shot(getX(), getY(), getRotation()));
                 gunClip.play();
                 shootTime = 0;
             }
-            shootTime++;
         }
 
         if(gc.getInput().isButtonUp(MouseEvent.BUTTON1)){
-            shootTime = 10;
+            shootTime = 1;
         }
 
         if(gc.getInput().isButtonDown(MouseEvent.BUTTON3)){
-            rockets.add(new Rocket(getX(), getY(), this));
+            gm.addToObjects(new Rocket(getX(), getY(), this));
             rocketClip.play();
         }
 
-        cleanShots(gc, dt);
-        cleanRockets(gc, dt);
-
-    }
-
-    @Override
-    public void render(GameContainer gc, Renderer renderer) {
-        super.render(gc, renderer);
-        for (Shot shot: shots){
-            shot.render(gc, renderer);
-        }
-
-        for (Rocket rocket : rockets){
-            rocket.render(gc, renderer);
-        }
     }
 
     public void goForward(GameContainer gc){
@@ -164,28 +150,6 @@ public class Boat extends ObjectA {
             turnTime = 0;
         }
         turnTime++;
-    }
-
-    public void cleanShots(GameContainer gc, float dt){
-        int shotsSize = shots.size();
-        for(int i = shotsSize - 1; i >= 0; i--){
-            Shot shot = shots.get(i);
-            shot.update(gc, dt);
-            if(shot.getLifeTime() == 0){
-                shots.remove(shot);
-            }
-        }
-    }
-
-    public void cleanRockets(GameContainer gc, float dt){
-        int rocketsSize = rockets.size();
-        for(int i = rocketsSize - 1; i >= 0; i--){
-            Rocket rocket = rockets.get(i);
-            rocket.update(gc, dt);
-            if(rocket.getLifeTime() == 0){
-                rockets.remove(rocket);
-            }
-        }
     }
 
     public Image getImage() {
