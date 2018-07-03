@@ -1,16 +1,16 @@
 package game;
 
 import engine.gfx.Image;
+import engine.classes.ObjectB;
 
-public class Shot {
-    Image image = new Image("/Shot.png");
+public class Shot extends ObjectB {
 
-    private double x,y,speed = 15, rotation;
+    private double speed = 25, rotation;
     private int lifeTime = 1 * 60;
 
     public Shot(double x, double y, double rotation) {
-        this.x = x;
-        this.y = y;
+        super(x , y);
+        image = new Image("/Shot.png");
         this.rotation = rotation;
     }
 
@@ -24,14 +24,6 @@ public class Shot {
 
     public Image getImage() {
         return image;
-    }
-
-    public int getX() {
-        return (int) x;
-    }
-
-    public int getY() {
-        return (int) y;
     }
 
     public double getRotation() {

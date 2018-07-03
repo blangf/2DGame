@@ -22,16 +22,30 @@ public class Renderer {
     }
 
     public void setPixel(int x, int y, int value){
-        if(x < 0 || x >= pW || y < 0 || y >= pH){
+        if((x < 0 || x >= pW || y < 0 || y >= pH) || ((value >> 24) & 0xff) == 0){
             return;
         }
-
         p[x + y * pW] = value;
-
-
     }
 
     public void drawImage(Image image, int offX, int offY){
+
+        if(offX < -image.getW()) return;
+        if(offY < -image.getH()) return;
+        if(offX >= pW) return;
+        if(offY >= pH) return;
+
+        int newX = 0;
+        int newY = 0;
+        int newWidth = image.getW();
+        int newHeight = image.getH();
+
+        if(offX < 0){newX -= offX;}
+        if(offY < 0){newY -= offY;}
+        if(newWidth + offX >= pW){newWidth -= newWidth + offX - pW;}
+        if(newHeight + offY >= pH){newHeight -= newHeight + offY -pH;}
+
+
         for(int y = 0; y < image.getH(); y++){
             for(int x = 0; x < image.getW(); x++){
                 setPixel(x + offX, y + offY, image.getP()[x + y * image.getW()]);

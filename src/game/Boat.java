@@ -1,15 +1,20 @@
 package game;
 
+import engine.GameContainer;
 import engine.Renderer;
 import engine.gfx.Image;
+import engine.classes.ObjectA;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Boat{
+public class Boat extends ObjectA {
 
-    Image image = new Image("/BoatRed.png");
-    private double x, y, speed, turnRightTime;
+    private double speed, turnTime, shootTime;
     private double rotation;
+    ArrayList<Shot> shots = new ArrayList<Shot>();
 
     private HashMap<Double, Image> images = new HashMap<Double, Image>(){
         {
@@ -50,10 +55,62 @@ public class Boat{
     };
 
     public Boat() {
+        super(0,0);
+        image = images.get(0.0);
         x = 150;
         y = 150;
         speed = 5;
         rotation = 0;
+    }
+
+    @Override
+    public void update(GameContainer gc, float dt) {
+        if(gc.getInput().isKey(KeyEvent.VK_W)){
+            goForward();
+        }
+
+        if(gc.getInput().isKey(KeyEvent.VK_D)){
+            turnRight();
+        } else if(gc.getInput().isKey(KeyEvent.VK_A)){
+            turnLeft();
+        }
+
+        if(gc.getInput().isKeyDown(KeyEvent.VK_SPACE)){
+            setSpeed(10);
+        }
+
+        if(gc.getInput().isKeyUp(KeyEvent.VK_SPACE)){
+            setSpeed(5);
+        }
+
+        if(gc.getInput().isButton(MouseEvent.BUTTON1)){
+            if(shootTime == 10){
+                shots.add(new Shot(getX(), getY(), getRotation()));
+                shootTime = 0;
+            }
+            shootTime++;
+        }
+
+        if(gc.getInput().isButtonUp(MouseEvent.BUTTON1)){
+            shootTime = 10;
+        }
+
+        int shotsSize = shots.size();
+        for(int i = shotsSize - 1; i >= 0; i--){
+            Shot shot = shots.get(i);
+            shot.updateShot();
+            if(shot.getLifeTime() == 0){
+                shots.remove(shot);
+            }
+        }
+    }
+
+    @Override
+    public void render(GameContainer gc, Renderer renderer) {
+        super.render(gc, renderer);
+        for (Shot shot: shots){
+            shot.render(gc, renderer);
+        }
     }
 
     public void goForward(){
@@ -62,39 +119,31 @@ public class Boat{
     }
 
     public void turnLeft(){
-        if (turnRightTime == 2){
+        if (turnTime == 2){
             if(rotation == 0.0){
                 rotation = 360.0;
             }
             rotation -= 11.25;
             image = images.get(rotation);
-            turnRightTime = 0;
+            turnTime = 0;
         }
-        turnRightTime++;
+        turnTime++;
     }
 
     public void turnRight(){
-        if (turnRightTime == 2){
+        if (turnTime == 2){
             if(rotation == 360.0){
                 rotation = 0.0;
             }
             rotation += 11.25;
             image = images.get(rotation);
-            turnRightTime = 0;
+            turnTime = 0;
         }
-        turnRightTime++;
+        turnTime++;
     }
 
     public Image getImage() {
         return image;
-    }
-
-    public int getX() {
-        return (int) x;
-    }
-
-    public int getY() {
-        return (int) y;
     }
 
     public double getRotation() {

@@ -13,7 +13,7 @@ public class GameContainer implements Runnable{
 
     //Window Info
     private int width = 1280, height = 720;
-    private float scale = 1;
+    private float scale = 1.5f;
     private String title = "2DGame v0.1";
 
     public GameContainer(AbstractGame game) {

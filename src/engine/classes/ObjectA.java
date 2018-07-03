@@ -1,7 +1,8 @@
-package engine.gfx;
+package engine.classes;
 
 import engine.GameContainer;
 import engine.Renderer;
+import engine.gfx.Image;
 
 public class ObjectA {
 
