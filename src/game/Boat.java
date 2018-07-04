@@ -16,6 +16,9 @@ public class Boat extends ObjectA {
 
     private double speed, turnTime, shootTime;
     private double rotation;
+    private float boostTime;
+    private boolean isBoost;
+    private int availableBoosts;
     SoundClip gunClip = new SoundClip("/audio/gunShot.wav");
     SoundClip rocketClip = new SoundClip("/audio/missile.wav");
 
@@ -64,10 +67,12 @@ public class Boat extends ObjectA {
         y = 150;
         speed = 5;
         rotation = 0;
+        availableBoosts = 3;
     }
 
     @Override
     public void update(GameContainer gc, float dt, AbstractGame gm) {
+
         if(gc.getInput().isKey(KeyEvent.VK_W)){
             goForward(gc);
         }
@@ -79,11 +84,11 @@ public class Boat extends ObjectA {
         }
 
         if(gc.getInput().isKeyDown(KeyEvent.VK_SPACE)){
-            setSpeed(10);
-        }
-
-        if(gc.getInput().isKeyUp(KeyEvent.VK_SPACE)){
-            setSpeed(5);
+            if(availableBoosts > 0 && !isBoost){
+                isBoost = true;
+                availableBoosts--;
+                System.out.println(availableBoosts);
+            }
         }
 
         shootTime += dt;
@@ -103,6 +108,17 @@ public class Boat extends ObjectA {
         if(gc.getInput().isButtonDown(MouseEvent.BUTTON3)){
             gm.addToObjects(new Rocket(getX() + 50, getY() + 50, this));
             rocketClip.play();
+        }
+
+        if(isBoost){
+            boostTime += dt;
+            if(boostTime < 3){
+                setSpeed(10);
+            } else {
+                setSpeed(5);
+                boostTime = 0;
+                isBoost = false;
+            }
         }
 
     }
