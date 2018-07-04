@@ -89,7 +89,6 @@ public class Boat extends ObjectA {
         shootTime += dt;
 
         if(gc.getInput().isButton(MouseEvent.BUTTON1)){
-            System.out.println(shootTime);
             if(shootTime > 0.2){
                 gm.addToObjects(new Shot(getX(), getY(), getRotation()));
                 gunClip.play();
@@ -102,7 +101,7 @@ public class Boat extends ObjectA {
         }
 
         if(gc.getInput().isButtonDown(MouseEvent.BUTTON3)){
-            gm.addToObjects(new Rocket(getX(), getY(), this));
+            gm.addToObjects(new Rocket(getX() + 50, getY() + 50, this));
             rocketClip.play();
         }
 
