@@ -16,6 +16,8 @@ import java.util.SplittableRandom;
 public class GameManager extends AbstractGame {
 
     Boat boat = new Boat();
+
+    //All updatable objects in the game are stored here
     ArrayList<Object> objects = new ArrayList<Object>(){
         {
             add(boat);
@@ -28,6 +30,7 @@ public class GameManager extends AbstractGame {
 
     }
 
+    //Gets called from the Mainloop
     @Override
     public void update(GameContainer gc, float dt, AbstractGame gm) {
         for(int i = 0; i < objects.size(); i++){
@@ -39,6 +42,7 @@ public class GameManager extends AbstractGame {
         }
     }
 
+    //Gets called from the Mainloop
     @Override
     public void render(GameContainer gc, Renderer renderer, AbstractGame gm) {
         for(int i = 0; i < objects.size(); i++){

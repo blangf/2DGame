@@ -1,5 +1,7 @@
 package engine;
 
+
+//Main Thread of the game with gameloop
 public class GameContainer implements Runnable{
 
     private Thread thread;
@@ -41,6 +43,8 @@ public class GameContainer implements Runnable{
         int frames = 0;
         int fps = 0;
 
+
+        //Main Gamaloop
         while(running){
             render = false;
             firstTime = System.nanoTime() / 1_000_000_000.0;
@@ -54,6 +58,7 @@ public class GameContainer implements Runnable{
                 unprocessedTime -= UPDATE_CAP;
                 render = true;
 
+                //Game gets updated
                 game.update(this, (float) UPDATE_CAP, game);
 
                 input.update();
@@ -68,6 +73,8 @@ public class GameContainer implements Runnable{
 
             if (render){
                 renderer.clear();
+
+                //Game gets rendered
                 game.render(this, renderer, game);
                 window.update();
                 frames++;
